@@ -1,13 +1,12 @@
-
-
 from flask import Flask
-
+from database import db
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def home():
+    print(db)
     return '6887'
 
 
