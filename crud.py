@@ -4,3 +4,11 @@ def serialize(doc):
 
 def get_cards(db):
     return serialize(db.cards.find())
+
+
+def get_card_by_id(db, id):
+    pass
+
+
+def update_card(db, id, newcard):
+    pass
