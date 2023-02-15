@@ -1,4 +1,7 @@
+import json
+
 from flask import Flask
+from crud import *
 from database import db
 
 app = Flask(__name__)
@@ -6,8 +9,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    print(db)
-    return '6887'
+    return json.dumps(get_cards(db))
 
 
 if __name__ == "__main__":
