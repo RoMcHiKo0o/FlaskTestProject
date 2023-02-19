@@ -1,7 +1,7 @@
 {
     "_id" : ObjectId("63f219d0cb5528905e90e5f3"),
     "series" : "1",
-    "number" : "9396",
+    "number" : "1-0000",
     "create_date" : ISODate("2023-02-14T10:00:00.000+0000"),
     "start_date" : ISODate("2023-02-14T10:00:00.000+0000"),
     "end_date" : ISODate("2023-03-14T10:00:00.000+0000"),
@@ -16,7 +16,7 @@
 {
     "_id" : ObjectId("63f219d0cb5528905e90e5f4"),
     "series" : "1",
-    "number" : "9200",
+    "number" : "1-0001",
     "create_date" : ISODate("2023-01-09T10:00:00.000+0000"),
     "start_date" : ISODate("2023-01-09T10:00:00.000+0000"),
     "end_date" : ISODate("2023-02-09T10:00:00.000+0000"),
@@ -33,7 +33,7 @@
 {
     "_id" : ObjectId("63f219d0cb5528905e90e5f5"),
     "series" : "2",
-    "number" : "4299",
+    "number" : "2-0000",
     "create_date" : ISODate("2023-02-12T10:00:00.000+0000"),
     "start_date" : "",
     "end_date" : "",
@@ -48,7 +48,7 @@
 {
     "_id" : ObjectId("63f219d0cb5528905e90e5f6"),
     "series" : "2",
-    "number" : "1111",
+    "number" : "2-0001",
     "create_date" : ISODate("2023-02-12T10:00:00.000+0000"),
     "start_date" : "",
     "end_date" : "",
