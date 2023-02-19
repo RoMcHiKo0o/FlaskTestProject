@@ -1,6 +1,14 @@
-from database import client
-
 DEFAULT_FIELDS = {'_id': 0, 'series': 1, 'number': 1, 'create_date': 1, 'end_date': 1, 'card_state': 1}
+
+
+def convert_type(field):
+    if field in ['number', 'series', 'card_state']:
+        return str
+    if field == 'discount':
+        return float
+    if field == 'buy_counter':
+        return int
+    return None
 
 
 def get_cards(db):
@@ -12,6 +20,9 @@ def get_cards_list(db, filter_search=None, fields=None):
         fields = DEFAULT_FIELDS
     if filter_search is None:
         fields = {}
+    for k, v in filter_search.items():
+        if (tpe := convert_type(k)) is not None:
+            filter_search[k] = tpe(v)
     return [i for i in db.cards.find(filter_search, fields)]
 
 
