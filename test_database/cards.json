@@ -1,0 +1,62 @@
+{
+    "_id" : ObjectId("63f219d0cb5528905e90e5f3"),
+    "series" : "1",
+    "number" : "9396",
+    "create_date" : ISODate("2023-02-14T10:00:00.000+0000"),
+    "start_date" : ISODate("2023-02-14T10:00:00.000+0000"),
+    "end_date" : ISODate("2023-03-14T10:00:00.000+0000"),
+    "recent_buy_date" : ISODate("2023-02-15T10:00:00.000+0000"),
+    "buy_counter" : 1.0,
+    "card_state" : "Activated",
+    "discount" : 3.5,
+    "orders" : [
+        ObjectId("63f2173fcb5528905e90e5ef")
+    ]
+}
+{
+    "_id" : ObjectId("63f219d0cb5528905e90e5f4"),
+    "series" : "1",
+    "number" : "9200",
+    "create_date" : ISODate("2023-01-09T10:00:00.000+0000"),
+    "start_date" : ISODate("2023-01-09T10:00:00.000+0000"),
+    "end_date" : ISODate("2023-02-09T10:00:00.000+0000"),
+    "recent_buy_date" : ISODate("2023-02-08T10:00:00.000+0000"),
+    "buy_counter" : 3.0,
+    "card_state" : "Expired",
+    "discount" : 5.0,
+    "orders" : [
+        ObjectId("63f2173fcb5528905e90e5f0"),
+        ObjectId("63f2173fcb5528905e90e5f1"),
+        ObjectId("63f2173fcb5528905e90e5f2")
+    ]
+}
+{
+    "_id" : ObjectId("63f219d0cb5528905e90e5f5"),
+    "series" : "2",
+    "number" : "4299",
+    "create_date" : ISODate("2023-02-12T10:00:00.000+0000"),
+    "start_date" : "",
+    "end_date" : "",
+    "recent_buy_date" : "",
+    "buy_counter" : 0.0,
+    "card_state" : "Not activated",
+    "discount" : 1.0,
+    "orders" : [
+
+    ]
+}
+{
+    "_id" : ObjectId("63f219d0cb5528905e90e5f6"),
+    "series" : "2",
+    "number" : "1111",
+    "create_date" : ISODate("2023-02-12T10:00:00.000+0000"),
+    "start_date" : "",
+    "end_date" : "",
+    "recent_buy_date" : "",
+    "buy_counter" : 0.0,
+    "card_state" : "Not activated",
+    "discount" : 1.0,
+    "orders" : [
+
+    ]
+}

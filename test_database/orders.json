@@ -1,0 +1,64 @@
+{
+    "_id" : ObjectId("63f2173fcb5528905e90e5ef"),
+    "date" : ISODate("2023-02-15T10:00:00.000+0000"),
+    "price" : 10.0,
+    "discount" : 3.5,
+    "total" : 9.65,
+    "products" : [
+        {
+            "id" : ObjectId("63ef4839a6a36ecd62717f00"),
+            "amount" : 2.0
+        },
+        {
+            "id" : ObjectId("63ef4839a6a36ecd62717f02"),
+            "amount" : 1.0
+        },
+        {
+            "id" : ObjectId("63ef4839a6a36ecd62717f03"),
+            "amount" : 1.0
+        }
+    ]
+}
+{
+    "_id" : ObjectId("63f2173fcb5528905e90e5f0"),
+    "date" : ISODate("2023-02-06T10:00:00.000+0000"),
+    "price" : 20.0,
+    "discount" : 5.0,
+    "total" : 19.0,
+    "products" : [
+        {
+            "id" : ObjectId("63ef4839a6a36ecd62717f04"),
+            "amount" : 2.0
+        }
+    ]
+}
+{
+    "_id" : ObjectId("63f2173fcb5528905e90e5f1"),
+    "date" : ISODate("2023-02-07T10:00:00.000+0000"),
+    "price" : 4.0,
+    "discount" : 5.0,
+    "total" : 3.8,
+    "products" : [
+        {
+            "id" : ObjectId("63ef4839a6a36ecd62717f00"),
+            "amount" : 1.0
+        },
+        {
+            "id" : ObjectId("63ef4839a6a36ecd62717f01"),
+            "amount" : 1.0
+        }
+    ]
+}
+{
+    "_id" : ObjectId("63f2173fcb5528905e90e5f2"),
+    "date" : ISODate("2023-02-08T10:00:00.000+0000"),
+    "price" : 1.0,
+    "discount" : 5.0,
+    "total" : 0.95,
+    "products" : [
+        {
+            "id" : ObjectId("63ef4839a6a36ecd62717f03"),
+            "amount" : 1.0
+        }
+    ]
+}

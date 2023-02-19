@@ -1,0 +1,25 @@
+{
+    "_id" : ObjectId("63ef4839a6a36ecd62717f00"),
+    "name" : "milk",
+    "price" : 2.0
+}
+{
+    "_id" : ObjectId("63ef4839a6a36ecd62717f01"),
+    "name" : "bread",
+    "price" : 2.0
+}
+{
+    "_id" : ObjectId("63ef4839a6a36ecd62717f02"),
+    "name" : "butter",
+    "price" : 5.0
+}
+{
+    "_id" : ObjectId("63ef4839a6a36ecd62717f03"),
+    "name" : "gum",
+    "price" : 1.0
+}
+{
+    "_id" : ObjectId("63ef4839a6a36ecd62717f04"),
+    "name" : "pizza",
+    "price" : 10.0
+}
