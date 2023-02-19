@@ -61,7 +61,7 @@ db.products.insertMany([
 
 //db.cards.insertMany([
 //    {
-//        'series':1,
+//        'series':'1',
 //        'number':'9396',
 //        'create_date':new ISODate('2023-02-14T10:00:00Z'),
 //        'start_date':new ISODate('2023-02-14T10:00:00Z'),
@@ -72,7 +72,7 @@ db.products.insertMany([
 //        'discount': 3.5,
 //        'orders': [ObjectId('63ed3a169a8f0b9eee7b42ce')]//    },
 //    {
-//        'series':1,
+//        'series':'1',
 //        'number':'9200',
 //        'create_date':new ISODate('2023-01-09T10:00:00Z'),
 //        'start_date':new ISODate('2023-01-09T10:00:00Z'),
@@ -87,7 +87,7 @@ db.products.insertMany([
 //            ObjectId('63ed3a169a8f0b9eee7b42d1')//        ]
 //    },
 //    {
-//        'series':2,
+//        'series':'2',
 //        'number':'4299',
 //        'create_date':new ISODate('2023-02-12T10:00:00Z'),
 //        'start_date': null,
@@ -101,7 +101,7 @@ db.products.insertMany([
 
 
 db.cards.insertOne({
-        'series':2,
+        'series':'2',
         'number':'1111',
         'create_date':new ISODate('2023-02-12T10:00:00Z'),
         'start_date': null,
@@ -123,3 +123,6 @@ db.orders.find({})
 db.products.find({})
 
 db.deleted_cards.find({})
+
+
+db.cards.find({'number': '1111', discount})
