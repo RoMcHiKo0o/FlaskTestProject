@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from crud import *
 from database import db
 from bson import json_util
@@ -14,14 +14,12 @@ def home():
 @app.route('/cards/')
 def getCardsList():
     res = get_cards_list(db)
-    print(res)
     return json_util.dumps({"message": res})
 
 
 @app.route('/cards/<number>/')
 def getCard(number):
     card = get_card_by_number(db, number)
-    print(card)
     return json_util.dumps({"message": card})
 
 
@@ -37,7 +35,7 @@ def deactivateCard(number):
     return json_util.dumps({"message": res})
 
 
-@app.route('/cards/<number>/delete/')
+@app.route('/cards/<number>/delete/', methods=["DELETE"])
 def deleteCard(number):
     res = delete_card(db, number)
     return json_util.dumps({"message": res})
@@ -47,6 +45,12 @@ def deleteCard(number):
 def rollbackCard(number):
     res = rollback_card(db, number)
     return json_util.dumps({"message": res})
+
+
+@app.route('/cards/filter')
+def filterCards():
+    cards = get_cards_list(db, dict(request.args))
+    return json_util.dumps({"message": cards})
 
 
 if __name__ == "__main__":
