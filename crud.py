@@ -1,3 +1,5 @@
+from datetime import datetime
+from datetime import timedelta
 DEFAULT_FIELDS = {'_id': 0, 'series': 1, 'number': 1, 'create_date': 1, 'end_date': 1, 'card_state': 1}
 
 
@@ -9,6 +11,10 @@ def convert_type(field):
     if field == 'buy_counter':
         return int
     return None
+
+
+def generate_number(n):
+    return f"{n[:2]}{int(n[2:])+1:04}"
 
 
 def get_cards(db):
@@ -38,7 +44,11 @@ def get_card_state(db, number):
 def activate_card(db, number):
     state = get_card_state(db, number)
     if state == "Not activated":
-        db.cards.update_one({'number': number}, {'$set': {'card_state': "Activated"}})
+        db.cards.update_one({'number': number}, {'$set': {
+            'card_state': "Activated",
+            "start_date": datetime.now(),
+            "end_date": datetime.now() + timedelta(days=30),
+        }})
         return "Card was successfully activated"
     elif state == "Expired":
         return 'Card is expired'
@@ -49,7 +59,11 @@ def activate_card(db, number):
 def deactivate_card(db, number):
     state = get_card_state(db, number)
     if state == "Activated":
-        db.cards.update_one({'number': number}, {'$set': {'card_state': "Not activated"}})
+        db.cards.update_one({'number': number}, {'$set': {
+            'card_state': "Not activated",
+            "start_date": '',
+            "end_date": '',
+        }})
         return "Card was successfully deactivated"
     elif state == "Expired":
         return 'Card is expired'
@@ -90,3 +104,28 @@ def insert_deleted_card(db, card):
         return card
     else:
         return "Card already exists"
+
+
+def generate_cards(db, json):
+    tmp = get_cards_list(db, filter_search={'series': json['series']}, fields={"_id": 0, "number": 1})
+    number = f"{json['series']}-0000"
+    last_number = 0
+    if len(tmp) != 0:
+        last_number = max([i['number'] for i in tmp])
+    for i in range(json['amount']):
+        if last_number != 0:
+            number = generate_number(last_number)
+        last_number = number
+        card = {
+            "series": json['series'],
+            "number": number,
+            "orders": [],
+            "buy_counter": 0,
+            "discount": json['discount'],
+            "create_date": datetime.now(),
+            "start_date": json['start_date'],
+            "end_date": json['end_date'],
+            'card_state': json['card_state']
+        }
+        db.cards.insert_one(card)
+    return "Cards have been added"
