@@ -1,10 +1,14 @@
 use test_database;
-
+//создание коллекций
 db.createCollection("orders")
 db.createCollection("products")
 db.createCollection("cards")
+//deleted_cards для возомжности восстановления карты
 db.createCollection("deleted_cards")
 
+//товары
+//name - название товара
+//price - цена товара
  db.products.insertMany([
      {
          "_id" : ObjectId("63ef4839a6a36ecd62717f00"),
@@ -33,6 +37,14 @@ db.createCollection("deleted_cards")
      },
  ])
 
+//заказы
+//Каждый заказ может содержать несколько товаров
+//card_number - номер карты с которой сделан заказ
+//date - дата заказа
+//price - цена без скидки
+//discount - скидка
+//total - цена со скидкой
+//products - список товаров в заказе и их количество
  db.orders.insertMany([
      {
          "_id" : ObjectId("63f2173fcb5528905e90e5ef"),
@@ -105,7 +117,17 @@ db.createCollection("deleted_cards")
  ])
 
 
-
+//карты
+//series - серия
+//number - номер (уникален)
+//create_date - дата выпуска
+//start_date - дата активации (карту можно создать но активировать позже)
+//end_date - дата окончания активации
+//recent_buy_date - дата последнего заказа
+//buy_counter - количество покупок
+//card_state - состояние карты
+//discount - скидка
+//orders - список id заказов
 db.cards.insertMany([
    {
        'series':'1',

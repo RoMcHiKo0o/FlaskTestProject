@@ -3,11 +3,12 @@ from datetime import datetime
 from datetime import timedelta
 
 from bson import ObjectId
-
+# поля которые выводятся по умолчанию
 DEFAULT_FIELDS = {'_id': 0, 'series': 1, 'number': 1, 'create_date': 1, 'end_date': 1, 'card_state': 1}
 
 
 def convert_card_type(field):
+    """возвращает тип для поля карты (None если приведение типов не требуется)"""
     if field in ['number', 'series', 'card_state']:
         return str
     if field == 'discount':
@@ -18,6 +19,7 @@ def convert_card_type(field):
 
 
 def convert_order_type(field):
+    """возвращает тип для поля заказа (None если приведение типов не требуется)"""
     if field in ['discount', 'total', 'price']:
         return float
     if field == "amount":
@@ -26,14 +28,23 @@ def convert_order_type(field):
 
 
 def generate_number(n):
+    """генерирует следующий номер карты
+        generate_number('1-0031') -> '1-0032'
+    """
     return f"{n[:2]}{int(n[2:]) + 1:04}"
 
 
 def get_cards(db):
+    """возвращает все карты со всеми полями кроме _id"""
     return [i for i in db.cards.find({}, {'_id': 0})]
 
 
 def get_cards_list(db, filter_search=None, fields=None):
+    """возврашает список карт с учетом фильтров и проекции
+        fields cлосварь вида {field1: 1 либо 0, field2: 1 либо 0, ...}
+        filter_search словарь фильтров как в mongodb, например {field1: value1, field2: value2}
+        фильтр дат из query параметров переводится в фильтрацию из mongodb
+    """
     if fields is None:
         fields = DEFAULT_FIELDS
 
@@ -59,15 +70,19 @@ def get_cards_list(db, filter_search=None, fields=None):
 
 
 def get_card_by_number(db, number):
+    """возвращает карту по номеру. {} если карты с таким номером нет"""
     return next(db.cards.find({'number': number}), {})
 
 
 def get_card_state(db, number):
+    """возвращает состояние карты"""
     card = db.cards.find({'number': number}, {"_id": 0, 'card_state': 1})
     return list(card)[0]['card_state']
 
 
 def activate_card(db, number):
+    """активирует карту по номеру. Если карта уже активирована, либо просрочена, то возвращает соотвествующее
+    сообщение"""
     state = get_card_state(db, number)
     if state == "Not activated":
         db.cards.update_one({'number': number}, {'$set': {
@@ -83,6 +98,8 @@ def activate_card(db, number):
 
 
 def deactivate_card(db, number):
+    """деактивирует карту по номеру. Если карта уже не активна, либо просрочена, то возвращает соотвествующее
+        сообщение"""
     state = get_card_state(db, number)
     if state == "Activated":
         db.cards.update_one({'number': number}, {'$set': {
@@ -98,6 +115,8 @@ def deactivate_card(db, number):
 
 
 def delete_card(db, number):
+    """удаляет карту по номеру и добавляет её в deleted_cards. Если возникает ошибка выводится соответствующее
+    сообщение"""
     card = get_card_by_number(db, number)
     if card == {}:
         return 'No card with that number'
