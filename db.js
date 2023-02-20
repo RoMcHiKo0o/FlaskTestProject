@@ -3,7 +3,7 @@ use test_database;
 db.createCollection("orders")
 db.createCollection("products")
 db.createCollection("cards")
-//deleted_cards для возомжности восстановления карты
+//deleted_cards для возможности восстановления карты
 db.createCollection("deleted_cards")
 
 //товары
@@ -121,7 +121,7 @@ db.createCollection("deleted_cards")
 //series - серия
 //number - номер (уникален)
 //create_date - дата выпуска
-//start_date - дата активации (карту можно создать но активировать позже)
+//start_date - дата активации (карту можно создать, но активировать позже)
 //end_date - дата окончания активации
 //recent_buy_date - дата последнего заказа
 //buy_counter - количество покупок
