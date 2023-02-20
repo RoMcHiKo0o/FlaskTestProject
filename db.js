@@ -36,6 +36,7 @@ db.createCollection("deleted_cards")
  db.orders.insertMany([
      {
          "_id" : ObjectId("63f2173fcb5528905e90e5ef"),
+         "card_number": "1-0000",
          'date': new ISODate('2023-02-15T10:00:00Z'),
          'price': 10,
          'discount': 3.5,
@@ -57,6 +58,7 @@ db.createCollection("deleted_cards")
      },
      {
          "_id" : ObjectId("63f2173fcb5528905e90e5f0"),
+         "card_number": "1-0001",
         'date': new ISODate('2023-02-06T10:00:00Z'),
         'price': 20,
         'discount': 5,
@@ -70,6 +72,7 @@ db.createCollection("deleted_cards")
      },
      {
          "_id" : ObjectId("63f2173fcb5528905e90e5f1"),
+         "card_number": "1-0001",
          'date': new ISODate('2023-02-07T10:00:00Z'),
          'price': 4,
          'discount': 5,
@@ -87,6 +90,7 @@ db.createCollection("deleted_cards")
      },
      {
          "_id" : ObjectId("63f2173fcb5528905e90e5f2"),
+         "card_number": "1-0001",
          'date': new ISODate('2023-02-08T10:00:00Z'),
          'price': 1,
          'discount': 5,
@@ -164,4 +168,38 @@ db.orders.find({})
 db.products.find({})
 
 db.deleted_cards.find({})
+
+
+
+db.cards.insertOne({
+        'series':'2',
+        'number':'2-0001',
+        'create_date':new ISODate('2023-02-19T18:27:00Z'),
+        'start_date': '',
+        'end_date': new ISODate('2023-02-19T15:37:00Z'),
+        'recent_buy_date':'',
+        'buy_counter':0,
+        'card_state':"Activated",
+        'discount': 1,
+        'orders': []
+    }
+)
+
+
+
+db.cards.aggregate([
+{
+        $match: {"_id": ObjectId('63f226f1cb5528905e90e5fc')}
+    },
+{
+    $lookup: {
+        from: "orders",
+        localField: "orders",
+        foreignField: "_id",
+        as: "fromorders"
+    }},
+   { $project: { "_id": 0, "fromorders": 1 } }
+]);
+
+
 
