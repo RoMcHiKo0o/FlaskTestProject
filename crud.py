@@ -41,9 +41,11 @@ def get_cards(db):
 
 def get_cards_list(db, filter_search=None, fields=None):
     """возврашает список карт с учетом фильтров и проекции
-        fields cлосварь вида {field1: 1 либо 0, field2: 1 либо 0, ...}
+        fields cловарь вида {field1: 1 либо 0, field2: 1 либо 0, ...}
         filter_search словарь фильтров как в mongodb, например {field1: value1, field2: value2}
         фильтр дат из query параметров переводится в фильтрацию из mongodb
+        from - с какой даты
+        to - по какую дату
     """
     if fields is None:
         fields = DEFAULT_FIELDS
@@ -126,10 +128,12 @@ def delete_card(db, number):
 
 
 def get_deleted_card_by_number(db, number):
+    """возвращает карту из deleted_cards по номеру, если карты нет, то возвращает {}"""
     return next(db.deleted_cards.find({'number': number}), {})
 
 
 def rollback_card(db, number):
+    """восстанавливает карту по номеру. При возникновении ошибок возвращает соответствующую ошибку"""
     card = get_deleted_card_by_number(db, number)
     if card == {}:
         return 'There is no deleted card with that number'
@@ -142,6 +146,7 @@ def rollback_card(db, number):
 
 
 def insert_deleted_card(db, card):
+    """добавляет карту в delered_cards. Если такая карта уже есть, то возвращает ошибку"""
     filter_search = {"$or": [{"_id": card['_id']}, {'series': card['series'], 'number': card['number']}]}
     res = get_cards_list(db, filter_search=filter_search)
     if not res:
@@ -152,6 +157,9 @@ def insert_deleted_card(db, card):
 
 
 def generate_cards(db, json):
+    """генерирует карты по json объекту с полями
+    'series', 'discount', 'create_date', 'start_date', 'end_date', 'card_state'
+    """
     tmp = get_cards_list(db, filter_search={'series': json['series']}, fields={"_id": 0, "number": 1})
     number = f"{json['series']}-0000"
     last_number = 0
@@ -177,16 +185,24 @@ def generate_cards(db, json):
 
 
 def get_order_by_id(db, order_id):
+    """возвращает заказ по id"""
     if not isinstance(order_id, ObjectId):
         order_id = ObjectId(order_id)
     return next(db.orders.find({"_id": order_id}, {"_id": 0}), {})
 
 
 def get_card_orders(db, number):
+    """возвращает заказы карты"""
     return get_filtered_orders(db, number)
 
 
 def get_filtered_orders(db, number, filter_search=None):
+    """возвращает заказы карты после фильтрации
+        filter_search словарь фильтров как в mongodb, например {field1: value1, field2: value2}
+        фильтр дат из query параметров переводится в фильтрацию из mongodb
+        from - с какой даты
+        to - по какую дату
+    """
     if filter_search is None:
         filter_search = {}
     else:
@@ -205,6 +221,7 @@ def get_filtered_orders(db, number, filter_search=None):
 
 
 def get_product_by_id(db, prod_id, fields=None):
+    """возвращает товар по id"""
     if fields is None:
         fields = {}
     if not isinstance(prod_id, ObjectId):
@@ -213,6 +230,7 @@ def get_product_by_id(db, prod_id, fields=None):
 
 
 def get_products(db, order_id):
+    """возврашает товары заказа"""
     order = get_order_by_id(db, order_id)
     if order == {}:
         return "No order with that id"
@@ -222,6 +240,7 @@ def get_products(db, order_id):
 
 
 def add_card_order(db, number, order_id):
+    """добавляет заказ в список поле orders карты с номером number"""
     db.cards.update_one(
         {"number": number},
         {"$push": {"orders": ObjectId(order_id)}}
@@ -229,6 +248,21 @@ def add_card_order(db, number, order_id):
 
 
 def create_order(db, number, json):
+    """создает заказ для карты с номером number по json объекту
+    [{товар1, количество1},{товар2, количество2}, ...]
+    пример json:
+    [
+    {
+        "id": "63ef4839a6a36ecd62717f02",
+        "amount": 1
+    },
+    {
+        "id": "63ef4839a6a36ecd62717f03",
+        "amount": 3
+    }
+    ]
+    При возникновении ошибки выдается соответствующая ошибка
+    """
     card = get_card_by_number(db, number)
     if card == {}:
         return "No card with that number"
