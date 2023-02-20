@@ -6,12 +6,20 @@ from bson import ObjectId
 DEFAULT_FIELDS = {'_id': 0, 'series': 1, 'number': 1, 'create_date': 1, 'end_date': 1, 'card_state': 1}
 
 
-def convert_type(field):
+def convert_card_type(field):
     if field in ['number', 'series', 'card_state']:
         return str
     if field == 'discount':
         return float
     if field == 'buy_counter':
+        return int
+    return None
+
+
+def convert_order_type(field):
+    if field in ['discount', 'total', 'price']:
+        return float
+    if field == "amount":
         return int
     return None
 
@@ -29,10 +37,10 @@ def get_cards_list(db, filter_search=None, fields=None):
         fields = DEFAULT_FIELDS
 
     if filter_search is None:
-        fields = {}
+        filter_search = {}
     else:
         for k, v in filter_search.items():
-            if (tpe := convert_type(k)) is not None:
+            if (tpe := convert_card_type(k)) is not None:
                 filter_search[k] = tpe(v)
     return [i for i in db.cards.find(filter_search, fields)]
 
@@ -142,9 +150,19 @@ def get_order_by_id(db, order_id):
     return next(db.orders.find({"_id": order_id}, {"_id": 0}), {})
 
 
-def get_orders(db, number):
-    order_list = get_card_by_number(db, number)['orders']
-    return [get_order_by_id(db, order) for order in order_list]
+def get_card_orders(db, number):
+    return get_filtered_orders(db, number)
+
+
+def get_filtered_orders(db, number, filter_search=None):
+    if filter_search is None:
+        filter_search = {}
+    else:
+        for k, v in filter_search.items():
+            if (tpe := convert_card_type(k)) is not None:
+                filter_search[k] = tpe(v)
+    filter_search['card_number'] = number
+    return list(db.orders.find(filter_search))
 
 
 def get_product_by_id(db, prod_id, fields=None):
@@ -160,4 +178,50 @@ def get_products(db, order_id):
     if order == {}:
         return "No order with that id"
     prod_list = order['products']
-    return [{**get_product_by_id(db, prod['id'], {"_id": 0, "name": 1}), "amount": prod['amount']} for prod in prod_list]
+    return [{**get_product_by_id(db, prod['id'], {"_id": 0, "name": 1}), "amount": prod['amount']} for prod in
+            prod_list]
+
+
+def add_card_order(db, number, order_id):
+    db.cards.update_one(
+        {"number": number},
+        {"$push": {"orders": ObjectId(order_id)}}
+    )
+
+
+def create_order(db, number, json):
+    card = get_card_by_number(db, number)
+    if card == {}:
+        return "No card with that number"
+    if card['card_state'] != 'Activated':
+        return "Card must be activated"
+    discount = card['discount']
+    products = []
+    price = 0
+    for el in json:
+        if el['amount'] <= 0 and isinstance(el['amount'], int):
+            return "Amount must be positive and integer"
+        prod = get_product_by_id(db, el['id'], {"_id": 0, "price": 1})
+        if prod == {}:
+            return "No product with that id"
+        price += prod['price'] * el['amount']
+        products.append(
+            {
+                "id": ObjectId(el['id']),
+                "amount": int(el['amount'])
+            }
+        )
+        if not products:
+            return "Empty order"
+
+    order = {
+        "card_number": number,
+        "date": datetime.now(),
+        "price": price,
+        "discount": discount,
+        "total": price * (100 - discount) / 100,
+        "products": products
+    }
+    order_id = db.orders.insert_one(order).inserted_id
+    add_card_order(db, number, order_id)
+    return "Order was successfully created"

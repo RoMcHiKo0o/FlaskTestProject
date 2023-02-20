@@ -72,7 +72,13 @@ def createCards():
 
 @app.route('/cards/<number>/orders/')
 def getCardOrders(number):
-    orders = get_orders(db, number)
+    orders = get_card_orders(db, number)
+    return json_util.dumps({"message": orders})
+
+
+@app.route('/cards/<number>/orders/filter')
+def filterCardOrders(number):
+    orders = get_filtered_orders(db, number, request.args)
     return json_util.dumps({"message": orders})
 
 
@@ -80,6 +86,12 @@ def getCardOrders(number):
 def getProducts(order_id):
     products = get_products(db, order_id)
     return json_util.dumps({"message": products})
+
+
+@app.route('/cards/<number>/create_order/', methods=['POST'])
+def createOrder(number):
+    res = create_order(db, number, request.json)
+    return json_util.dumps({"message": res})
 
 
 if __name__ == "__main__":
