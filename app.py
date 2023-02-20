@@ -78,7 +78,7 @@ def getCardOrders(number):
 
 @app.route('/cards/<number>/orders/filter')
 def filterCardOrders(number):
-    orders = get_filtered_orders(db, number, request.args)
+    orders = get_filtered_orders(db, number, dict(request.args))
     return json_util.dumps({"message": orders})
 
 

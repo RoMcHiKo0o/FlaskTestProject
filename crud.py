@@ -1,3 +1,4 @@
+from copy import copy
 from datetime import datetime
 from datetime import timedelta
 
@@ -39,8 +40,20 @@ def get_cards_list(db, filter_search=None, fields=None):
     if filter_search is None:
         filter_search = {}
     else:
-        for k, v in filter_search.items():
-            if (tpe := convert_card_type(k)) is not None:
+        for k, v in tuple(filter_search.items()):
+            if k == 'from_create_date':
+                filter_search['create_date'] = {"$gte": datetime.fromisoformat(v)}
+                filter_search.pop('from_create_date')
+            if k == 'to_create_date':
+                filter_search['create_date'] = {"$lte": datetime.fromisoformat(v)}
+                filter_search.pop('to_create_date')
+            if k == 'from_end_date':
+                filter_search['end_date'] = {"$gte": datetime.fromisoformat(v)}
+                filter_search.pop('from_end_date')
+            if k == 'to_end_date':
+                filter_search['end_date'] = {"$lte": datetime.fromisoformat(v)}
+                filter_search.pop('to_end_date')
+            elif (tpe := convert_card_type(k)) is not None:
                 filter_search[k] = tpe(v)
     return [i for i in db.cards.find(filter_search, fields)]
 
@@ -158,10 +171,17 @@ def get_filtered_orders(db, number, filter_search=None):
     if filter_search is None:
         filter_search = {}
     else:
-        for k, v in filter_search.items():
-            if (tpe := convert_card_type(k)) is not None:
+        for k, v in tuple(filter_search.items()):
+            if k == 'from_date':
+                filter_search['date'] = {"$gte": datetime.fromisoformat(v)}
+                filter_search.pop('from_date')
+            if k == 'to_date':
+                filter_search['date'] = {"$lte": datetime.fromisoformat(v)}
+                filter_search.pop('to_date')
+            elif (tpe := convert_order_type(k)) is not None:
                 filter_search[k] = tpe(v)
     filter_search['card_number'] = number
+    print(filter_search)
     return list(db.orders.find(filter_search))
 
 
