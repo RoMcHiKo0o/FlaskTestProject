@@ -4,6 +4,8 @@ from datetime import datetime
 from crud import *
 from database import db
 
+DEFAULT_DISCOUNT = 1.0
+
 app = Flask(__name__)
 
 
@@ -65,7 +67,7 @@ def createCards():
     else:
         post['card_state'] = "Activated"
     if 'discount' not in post:
-        post['discount'] = 2.0
+        post['discount'] = DEFAULT_DISCOUNT
     res = generate_cards(db, request.json)
     return json_util.dumps({'message': res})
 
