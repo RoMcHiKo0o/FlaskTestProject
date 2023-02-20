@@ -174,6 +174,7 @@ def generate_cards(db, json):
             "number": number,
             "orders": [],
             "buy_counter": 0,
+            "recent_buy_date": '',
             "discount": json['discount'],
             "create_date": datetime.now(),
             "start_date": json['start_date'],
@@ -243,7 +244,11 @@ def add_card_order(db, number, order_id):
     """добавляет заказ в список поле orders карты с номером number"""
     db.cards.update_one(
         {"number": number},
-        {"$push": {"orders": ObjectId(order_id)}}
+        {
+            "$push": {"orders": ObjectId(order_id)},
+            "$inc": {"buy_counter": 1},
+            "$set": {"recent_buy_date": datetime.now()}
+        }
     )
 
 
